@@ -1,4 +1,3 @@
-
 // Copyright 2018 The Exonum Team
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use exonum::blockchain::{ExecutionError, ExecutionResult, Transaction};
-use exonum::crypto::{CryptoHash, PublicKey, sign, gen_keypair};
-use exonum::messages::Message;
-use exonum::storage::Fork;
+// Workaround for `failure` see https://github.com/rust-lang-nursery/failure/issues/223 and
+// ECR-1771 for the details.
+#![allow(bare_trait_objects)]
 
-use CRYPTOCURRENCY_SERVICE_ID;
+use exonum::{
+    blockchain::{ExecutionError, ExecutionResult, Transaction}, crypto::{CryptoHash, PublicKey},
+    messages::Message, storage::Fork,
+};
+
 use schema::CurrencySchema;
+use CRYPTOCURRENCY_SERVICE_ID;
 
 /// Error codes emitted by wallet transactions during execution.
 #[derive(Debug, Fail)]
@@ -122,6 +125,7 @@ impl Transaction for Issue {
             Err(Error::ReceiverNotFound)?
         }
     }
+
 }
 
 impl Transaction for Transfer {
@@ -220,9 +224,3 @@ impl Transaction for MailAcceptance {
 
     }
 }
-
-
-
-
-
-
